@@ -1,66 +1,89 @@
-<div class="app_body">
-	
-<h1>Win</h1>
-
-<a href="#/help">go!</a>
-<input type="text" id="app_name">
-<div id="app"></div>
 <?php
-// mkdir("../wp-content/plugins/miles_tmp/test");
-?>
+require plugin_dir_path( __FILE__ ) . '/lofty_functions.php';
+require 'lib/handlebars-php/src/Handlebars/Autoloader.php';
+Handlebars\Autoloader::register();
 
-<?php
-// $myfile = fopen("../wp-content/plugins/miles_tmp/test/newfile.txt", "w") or die("Unable to open file!");
-// $txt = "Mickey Mouse\n";
-// fwrite($myfile, $txt);
-// $txt = "Minnie Mouse\n";
-// fwrite($myfile, $txt);
-// fclose($myfile);
+use Handlebars\Handlebars;
 
-// rename("../wp-content/plugins/miles_tmp/test", "../wp-content/plugins/test");
+$engine = new Handlebars;
+
 ?>
+<div class="wrap">
+	<h1>Test</h1>
+	<a href="#/page/my_apps">My Apps</a>
 <script>
-jQuery(document).ready(function($) {
-	jQuery('.app_body').html('<div style="width:100%;text-align:center;"><img src="../wp-content/plugins/miles_tmp/assets/images/ajax-loader.gif"></div>');
-
-		jQuery.ajaxSetup({
-			beforeSend: function() {
-				jQuery('#app').html('<div style="width:100%;text-align:center;"><img src="../wp-content/plugins/miles_tmp/assets/images/ajax-loader.gif"></div>');
-			}
-		});
-
+	jQuery(document).ready(function($) {
 var AppRouter = Backbone.Router.extend({
   routes: {
-    "help":                 "help",    // #help
-    "search/:query":        "search" // #search/kiwis
+    "page/:option":         "page"
   },
-  help: function() {
-$.ajax({
-	url: '../wp-content/plugins/miles_tmp/ajax.php',
-	type: 'GET',
-	data: {route: jQuery('#app_name').val()},
-})
-.done(function(data) {
-	jQuery('#app').html(data);
-	console.log("success");
-})
-.fail(function() {
-	console.log("error");
-})
-.always(function() {
-	console.log("complete");
-});
-
-},
-	  search: function(query) {
-	}
+  page: function(option) {
+  	jQuery('.route').fadeOut(300);
+  	setTimeout(function() {
+  		 	jQuery('#'+option).fadeIn(300);
+  	}, 300);
+ 
+  }
 });
     // Initiate the router
     var app_router = new AppRouter;
     // Start Backbone history a necessary step for bookmarkable URL's
     Backbone.history.start();	
 });
-
 </script>
+<div id="app">
+	<div id="my_apps" class="route">
+		<h2>My Apps</h2>
+	<table>
+		<tr>
+			<th>
+			Name
+			</th>
+			<th>
+			Slug
+			</th>
+		</tr>
+	<?php
+	var_dump(get_option( 'my_apps' ));
+	?>
+	</table>
+	<a href="#/page/create_app" class="button button-primary">Create New App</a>
+	</div>
+
+<div id="create_app" class="route">
+<h2>Create App</h2>
+<form action="" method="POST">
+<table>
+<tr>
+	<th>
+	Name
+	</th>
+	<td>
+	<input type="text" name="new_app">	
+	</td>
+</tr>
+<tr>
+	<th>
+
+	</th>
+	<td>
+<input type="submit" class="button button-primary" value="Submit">
+	</td>
+</tr>
+</table>
+
+</form>
+<a href="#/page/my_apps">Back to My Apps</a>
+	</div>
+</div>
 
 </div>
+
+<?php
+	if (isset($_POST['new_app'])) {
+		$array = get_option( 'my_apps' );
+		array_push($array, $_POST['new_app']);
+		update_option( 'my_apps', $array , '', 'yes' );
+	}
+?>
+
