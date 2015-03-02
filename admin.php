@@ -39,11 +39,30 @@ var AppRouter = Backbone.Router.extend({
 			Name
 			</th>
 			<th>
-			Slug
+			Edit
 			</th>
+			<th>
+			Remove
+			</th>	
 		</tr>
 	<?php
-	var_dump(get_option( 'my_apps' ));
+
+	$my_apps = get_option( 'my_apps' );
+	foreach ($my_apps as $app) {
+	?>
+		<tr>
+			<td>
+			<?php echo $app; ?>
+			</td>
+			<td>
+			<a href="">R</a>
+			</td>
+			<td>
+			<a href="">R</a>
+			</td>
+		</tr>
+	<?php
+	}
 	?>
 	</table>
 	<a href="#/page/create_app" class="button button-primary">Create New App</a>
@@ -80,7 +99,10 @@ var AppRouter = Backbone.Router.extend({
 
 <?php
 	if (isset($_POST['new_app'])) {
-		$array = get_option( 'my_apps' );
+		$array = array();
+		if(get_option( 'my_apps' )) {
+			$array =  get_option( 'my_apps' );
+		}
 		array_push($array, $_POST['new_app']);
 		update_option( 'my_apps', $array , '', 'yes' );
 	}
