@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Boilerplate
+Plugin Name: Plugin Creator
 Plugin URI: http://wordpress.org/plugins/hello-dolly/
 Description: Boilerplate Plugin Creator
 Author: Richard Miles
@@ -8,9 +8,9 @@ Version: 0
 Author URI: http://richymiles.wordpress.com
 */
 
-add_action('admin_menu', 'my_plugin_menu');
+add_action('admin_menu', 'plugin_creator_admin_menu');
 
-function my_plugin_menu() {
+function plugin_creator_admin_menu() {
 	add_options_page('My Options', 'Plugin Creator', 'manage_options', plugin_dir_path( __FILE__ ) . 'admin.php');
 }
 
